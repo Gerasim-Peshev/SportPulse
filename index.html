@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="Follow live sports, star matches, and keep up with fixtures and results.">
+  <title>SportPulse — Live Sports</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="SportPulse home"><span class="brand-mark">S</span><span>Sport<span class="accent">Pulse</span></span></a>
+      <div class="top-actions">
+        <span class="connection"><i></i><span id="connection-label">Demo data</span></span>
+        <button class="icon-button" id="settings-open" aria-label="Open settings" title="Settings">⚙</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow"><span class="live-dot"></span> YOUR SPORTS, ONE PLACE</p>
+          <h1>Never miss<br><span class="gradient-text">a moment.</span></h1>
+          <p class="hero-copy">Live scores, fixtures and results. Star a match to keep it close.</p>
+        </div>
+        <div class="hero-ball" aria-hidden="true">✦</div>
+      </section>
+
+      <nav class="tabs" aria-label="Match views">
+        <button class="tab active" data-view="live">Live <span class="tab-count" id="live-count">0</span></button>
+        <button class="tab" data-view="upcoming">Upcoming</button>
+        <button class="tab" data-view="results">Results</button>
+        <button class="tab" data-view="starred">★ Starred</button>
+      </nav>
+
+      <section class="toolbar">
+        <div class="search-wrap"><span>⌕</span><input id="search" type="search" placeholder="Search teams, leagues…" autocomplete="off"></div>
+        <select id="sport-filter" aria-label="Filter by sport">
+          <option value="all">All sports</option><option value="Football">Football</option><option value="Basketball">Basketball</option><option value="Tennis">Tennis</option><option value="Hockey">Hockey</option>
+        </select>
+      </section>
+
+      <section class="date-strip" id="date-strip" aria-label="Date filter">
+        <button class="date-chip active" data-date="today">Today</button>
+        <button class="date-chip" data-date="tomorrow">Tomorrow</button>
+        <button class="date-chip" data-date="week">Next 7 days</button>
+      </section>
+
+      <section class="section-heading">
+        <div><p class="eyebrow" id="section-kicker">HAPPENING NOW</p><h2 id="section-title">Live matches</h2></div>
+        <button class="text-button" id="refresh">↻ Refresh</button>
+      </section>
+      <div class="status-message" id="status-message" role="status"></div>
+      <section id="matches" class="match-list" aria-live="polite"></section>
+      <section id="empty-state" class="empty-state hidden">
+        <div class="empty-icon">✦</div><h3 id="empty-title">No matches found</h3><p id="empty-copy">Try changing your filters or check back later.</p>
+      </section>
+      <p class="data-note" id="data-note">Demo scores are shown until you configure a sports data provider.</p>
+    </main>
+
+    <footer class="bottom-nav">
+      <button class="bottom-item selected" data-view="live"><span>◉</span>Live</button>
+      <button class="bottom-item" data-view="upcoming"><span>▦</span>Fixtures</button>
+      <button class="bottom-item" data-view="starred"><span>☆</span>Starred</button>
+      <button class="bottom-item" id="bottom-settings"><span>⚙</span>Settings</button>
+    </footer>
+  </div>
+
+  <dialog id="settings-dialog">
+    <form method="dialog" class="dialog-content">
+      <div class="dialog-head"><div><p class="eyebrow">PERSONALISE YOUR FEED</p><h2>Settings</h2></div><button class="icon-button" value="cancel" aria-label="Close">×</button></div>
+      <div class="setting-row"><div><strong>Match notifications</strong><p>Notify when a starred match goes live and when its score changes while this app is open.</p></div><button type="button" class="primary-button" id="enable-notifications">Enable</button></div>
+      <p class="small-note" id="notification-status">Notifications are not enabled.</p>
+      <div class="setting-row stacked"><label for="api-provider"><strong>Data provider</strong><p>Choose the source used to load event data.</p></label>
+        <select id="api-provider"><option value="demo">Demo data (works immediately)</option><option value="thesportsdb">TheSportsDB public demo feed</option></select>
+      </div>
+      <div class="setting-row stacked"><label for="api-key"><strong>API key (optional)</strong><p>Stored only in this browser. Do not put private keys in a public GitHub Pages repository.</p></label><input id="api-key" type="password" placeholder="API key, if required" autocomplete="off"></div>
+      <div class="setting-row stacked"><label for="poll-interval"><strong>Refresh interval</strong><p>Polling runs only while the app is open.</p></label><select id="poll-interval"><option value="30">30 seconds</option><option value="60" selected>60 seconds</option><option value="120">2 minutes</option><option value="300">5 minutes</option></select></div>
+      <div class="notice"><strong>Background push limitation</strong><p>GitHub Pages is static hosting and cannot run a server that checks scores in the background. Reliable notifications when the app is closed need a push backend (for example, Cloudflare Workers plus a database and push service).</p></div>
+      <div class="dialog-actions"><button class="secondary-button" value="cancel">Close</button><button class="primary-button" id="save-settings" value="save">Save settings</button></div>
+    </form>
+  </dialog>
+
+  <script src="./app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("Service worker registration failed", err)));
+    }
+  </script>
+</body>
+</html>
